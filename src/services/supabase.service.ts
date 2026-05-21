@@ -65,11 +65,30 @@ export class SupabaseService {
   }
 
   private loadConfiguration() {
-    // 1. Try to load from environment variables (useful for pre-configured deployments)
-    const envUrl = getEnvVar('SUPABASE_URL');
-    const envKey = getEnvVar('SUPABASE_ANON_KEY');
-    const envBucket = getEnvVar('SUPABASE_BUCKET');
-    const envAuto = getEnvVar('SUPABASE_AUTO_BACKUP') === 'true';
+    // 1. Try to load from environment variables (statically accessed for Vite/Vercel build-time replacement)
+    let envUrl = '';
+    let envKey = '';
+    let envBucket = '';
+    let envAuto = false;
+
+    try {
+      const metaEnv = (import.meta as any).env;
+      if (metaEnv) {
+        envUrl = metaEnv.VITE_SUPABASE_URL || '';
+        envKey = metaEnv.VITE_SUPABASE_ANON_KEY || '';
+        envBucket = metaEnv.VITE_SUPABASE_BUCKET || '';
+        envAuto = metaEnv.VITE_SUPABASE_AUTO_BACKUP === 'true';
+      }
+    } catch (e) {}
+
+    // Fallback to getEnvVar check
+    if (!envUrl) envUrl = getEnvVar('SUPABASE_URL');
+    if (!envKey) envKey = getEnvVar('SUPABASE_ANON_KEY');
+    if (!envBucket) envBucket = getEnvVar('SUPABASE_BUCKET');
+    if (!envAuto) {
+      const autoStr = getEnvVar('SUPABASE_AUTO_BACKUP');
+      if (autoStr) envAuto = autoStr === 'true';
+    }
 
     if (envUrl && envKey && envBucket) {
       this.url.set(envUrl);
