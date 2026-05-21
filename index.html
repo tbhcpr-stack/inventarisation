@@ -71,6 +71,15 @@
       background: #94a3b8;
     }
 
+    /* Hide scrollbar for Chrome, Safari, Opera, Firefox and IE/Edge */
+    .scrollbar-none::-webkit-scrollbar {
+      display: none;
+    }
+    .scrollbar-none {
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
+    }
+
     /* Print-specific styles */
     @media print {
 

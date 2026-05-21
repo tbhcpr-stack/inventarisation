@@ -65,7 +65,26 @@ export class SupabaseService {
   }
 
   private loadConfiguration() {
-    // 1. Try to load from environment variables (statically accessed for Vite/Vercel build-time replacement)
+    // 1. Try to load from LocalStorage first (UI settings have priority over environment defaults)
+    try {
+      const storageUrl = localStorage.getItem('resource_tracker_supabase_url');
+      const storageKey = localStorage.getItem('resource_tracker_supabase_anon_key');
+      const storageBucket = localStorage.getItem('resource_tracker_supabase_bucket');
+      const storageAutoBackup = localStorage.getItem('resource_tracker_supabase_auto_backup') === 'true';
+
+      if (storageUrl?.trim() && storageKey?.trim() && storageBucket?.trim()) {
+        this.url.set(storageUrl.trim());
+        this.anonKey.set(storageKey.trim());
+        this.bucket.set(storageBucket.trim());
+        this.autoBackup.set(storageAutoBackup);
+        console.log('Supabase configured via LocalStorage (UI settings override).');
+        return;
+      }
+    } catch (e) {
+      console.error('Error loading Supabase config from LocalStorage:', e);
+    }
+
+    // 2. Fallback to environment variables (statically accessed for Vite/Vercel build-time replacement)
     let envUrl = '';
     let envKey = '';
     let envBucket = '';
@@ -98,29 +117,30 @@ export class SupabaseService {
       console.log('Supabase configured via environment variables.');
       return;
     }
-
-    // 2. Fallback to LocalStorage
-    try {
-      this.url.set(localStorage.getItem('resource_tracker_supabase_url') || '');
-      this.anonKey.set(localStorage.getItem('resource_tracker_supabase_anon_key') || '');
-      this.bucket.set(localStorage.getItem('resource_tracker_supabase_bucket') || '');
-      this.autoBackup.set(localStorage.getItem('resource_tracker_supabase_auto_backup') === 'true');
-    } catch (e) {
-      console.error('Error loading Supabase config from LocalStorage:', e);
-    }
   }
 
   saveCredentials(url: string, key: string, bucket: string, autoBackup: boolean) {
-    this.url.set(url.trim());
-    this.anonKey.set(key.trim());
-    this.bucket.set(bucket.trim());
+    const trimmedUrl = url.trim();
+    const trimmedKey = key.trim();
+    const trimmedBucket = bucket.trim();
+
+    this.url.set(trimmedUrl);
+    this.anonKey.set(trimmedKey);
+    this.bucket.set(trimmedBucket);
     this.autoBackup.set(autoBackup);
 
     try {
-      localStorage.setItem('resource_tracker_supabase_url', url.trim());
-      localStorage.setItem('resource_tracker_supabase_anon_key', key.trim());
-      localStorage.setItem('resource_tracker_supabase_bucket', bucket.trim());
-      localStorage.setItem('resource_tracker_supabase_auto_backup', autoBackup ? 'true' : 'false');
+      if (trimmedUrl && trimmedKey && trimmedBucket) {
+        localStorage.setItem('resource_tracker_supabase_url', trimmedUrl);
+        localStorage.setItem('resource_tracker_supabase_anon_key', trimmedKey);
+        localStorage.setItem('resource_tracker_supabase_bucket', trimmedBucket);
+        localStorage.setItem('resource_tracker_supabase_auto_backup', autoBackup ? 'true' : 'false');
+      } else {
+        localStorage.removeItem('resource_tracker_supabase_url');
+        localStorage.removeItem('resource_tracker_supabase_anon_key');
+        localStorage.removeItem('resource_tracker_supabase_bucket');
+        localStorage.removeItem('resource_tracker_supabase_auto_backup');
+      }
     } catch (e) {
       console.error('Error saving Supabase config to LocalStorage:', e);
     }

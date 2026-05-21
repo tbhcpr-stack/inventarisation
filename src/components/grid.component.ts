@@ -26,7 +26,7 @@ import { PrintService } from '../services/print.service';
     >
       <!-- Grid Controls -->
       <div class="p-3 border-b border-slate-200/50 bg-white/40 flex items-center justify-between text-sm shrink-0 flex-wrap gap-3 no-print backdrop-blur-sm">
-        <div class="flex items-center gap-4 flex-wrap">
+        <div class="flex items-center gap-3 sm:gap-4 flex-wrap w-full lg:w-auto justify-center lg:justify-start">
             <span class="font-semibold text-xs text-slate-600 uppercase tracking-wider">{{ ts.t('grid_layout') }}</span>
             <div class="flex items-center gap-1 bg-white/60 rounded-full p-1 shadow-sm border border-white/40">
                 <button 
@@ -39,29 +39,29 @@ import { PrintService } from '../services/print.service';
                   [class.bg-white/50]="!isFitContent()"
                   [class.text-slate-600]="!isFitContent()"
                   [class.hover:bg-white]="!isFitContent()"
-                  class="px-4 py-1.5 rounded-full text-xs transition-all font-medium flex items-center gap-2"
+                  class="px-3 sm:px-4 py-1.5 rounded-full text-[11px] sm:text-xs transition-all font-medium flex items-center gap-1.5 sm:gap-2"
                 >
-                  <div class="w-2 h-2 rounded-full transition-colors" [class.bg-white]="isFitContent()" [class.bg-slate-400]="!isFitContent()"></div>
+                  <div class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full transition-colors" [class.bg-white]="isFitContent()" [class.bg-slate-400]="!isFitContent()"></div>
                   {{ ts.t('fit_content') }}
                 </button>
             </div>
-            <div class="h-5 w-px bg-slate-300"></div>
-            <div class="flex items-center gap-1.5">
-                <span class="text-xs font-semibold text-slate-600 uppercase tracking-wider mr-1">{{ ts.t('zoom') }}</span>
-                <button (click)="zoomOut()" class="w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-slate-50 text-slate-600 shadow-sm border border-slate-200 font-mono transition-transform hover:scale-105" title="Zoom Out (Ctrl + Mouse Wheel)">-</button>
-                <button (click)="resetZoom()" class="text-xs w-14 font-semibold text-slate-700 hover:text-blue-600 transition-colors text-center" title="Reset Zoom">{{ zoomLevel() * 100 | number:'1.0-0' }}%</button>
-                <button (click)="zoomIn()" class="w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-slate-50 text-slate-600 shadow-sm border border-slate-200 font-mono transition-transform hover:scale-105" title="Zoom In (Ctrl + Mouse Wheel)">+</button>
+            <div class="h-5 w-px bg-slate-300 hidden sm:block"></div>
+            <div class="flex items-center gap-1 sm:gap-1.5">
+                <span class="text-[11px] sm:text-xs font-semibold text-slate-600 uppercase tracking-wider mr-1">{{ ts.t('zoom') }}</span>
+                <button (click)="zoomOut()" class="w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center rounded-full bg-white hover:bg-slate-50 text-slate-600 shadow-sm border border-slate-200 font-mono transition-transform hover:scale-105 text-xs" title="Zoom Out (Ctrl + Mouse Wheel)">-</button>
+                <button (click)="resetZoom()" class="text-[11px] sm:text-xs w-11 sm:w-14 font-semibold text-slate-700 hover:text-blue-600 transition-colors text-center" title="Reset Zoom">{{ zoomLevel() * 100 | number:'1.0-0' }}%</button>
+                <button (click)="zoomIn()" class="w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center rounded-full bg-white hover:bg-slate-50 text-slate-600 shadow-sm border border-slate-200 font-mono transition-transform hover:scale-105 text-xs" title="Zoom In (Ctrl + Mouse Wheel)">+</button>
             </div>
         </div>
 
-        <div class="flex items-center gap-3 flex-wrap justify-end">
-            <button (click)="printGrid()" class="px-4 py-2 bg-slate-800 text-white rounded-xl hover:bg-slate-900 transition-all hover:scale-105 shadow-md hover:shadow-lg font-medium flex items-center gap-2 text-xs">
+        <div class="flex items-center gap-2.5 sm:gap-3 flex-wrap justify-between w-full lg:w-auto lg:justify-end">
+            <button (click)="printGrid()" class="flex-1 lg:flex-none px-3 py-2 bg-slate-800 text-white rounded-xl hover:bg-slate-900 transition-all hover:scale-105 shadow-md hover:shadow-lg font-medium flex items-center justify-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs">
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
               {{ ts.t('print') }}
             </button>
             <button 
               (click)="confirmUsage()" 
-              class="px-4 py-2 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-xl hover:from-emerald-600 hover:to-green-700 transition-all hover:scale-105 shadow-md hover:shadow-lg font-medium flex items-center gap-2 text-xs"
+              class="flex-1 lg:flex-none px-3 py-2 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-xl hover:from-emerald-600 hover:to-green-700 transition-all hover:scale-105 shadow-md hover:shadow-lg font-medium flex items-center justify-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs"
               [disabled]="!projectService.hasUnconfirmedChanges()"
               [class.opacity-50]="!projectService.hasUnconfirmedChanges()"
               [class.cursor-not-allowed]="!projectService.hasUnconfirmedChanges()"
@@ -79,16 +79,16 @@ import { PrintService } from '../services/print.service';
         [style.zoom]="zoomLevel()"
       >
         <table 
-          class="border-collapse" 
+          class="border-collapse min-w-full" 
           [class.w-full]="!isFitContent()"
           [class.table-auto]="isFitContent()"
           [class.table-fixed]="!isFitContent()"
         >
-          <thead class="sticky top-0 z-20 bg-slate-100/90 backdrop-blur-md shadow-sm">
+          <thead class="sticky top-0 z-20 bg-slate-100 shadow-sm">
             <tr>
               <th 
                 #prodHeader
-                class="p-3 text-left border-b border-slate-200 bg-slate-100/90 backdrop-blur-md font-bold text-slate-700 sticky left-0 z-30 text-xs uppercase tracking-wider whitespace-nowrap min-w-[150px]"
+                class="p-3 text-left border-b border-slate-200 bg-slate-100 font-bold text-slate-700 sticky left-0 z-30 text-xs uppercase tracking-wider whitespace-nowrap min-w-[150px]"
                 [style.resize]="isFitContent() ? 'none' : 'horizontal'"
                 [style.overflow]="isFitContent() ? 'visible' : 'hidden'"
                 [style.width]="isFitContent() ? 'auto' : savedProdWidth"
@@ -117,17 +117,17 @@ import { PrintService } from '../services/print.service';
                 </th>
               }
               <!-- Add Department Button Column -->
-              <th class="p-3 w-14 border-b border-slate-200 bg-slate-50/90 backdrop-blur-md no-print">
+              <th class="p-3 w-14 min-w-[56px] max-w-[56px] border-b border-slate-200 bg-slate-50 no-print">
                  <button (click)="promptAddDept()" class="w-8 h-8 flex items-center justify-center rounded-full bg-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5" [title]="ts.t('add_new_dept')">
                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                  </button>
               </th>
               <!-- Total Column -->
-              <th class="p-3 w-28 border-b border-l border-slate-200 bg-slate-100/90 backdrop-blur-md text-slate-800 font-extrabold sticky right-[112px] z-20 shadow-[-5px_0_15px_-5px_rgba(0,0,0,0.05)] text-xs uppercase tracking-wider">
+              <th class="p-3 w-28 min-w-[112px] max-w-[112px] border-b border-l border-slate-200 bg-slate-100 text-slate-800 font-extrabold sticky right-[112px] z-20 shadow-[-5px_0_15px_-5px_rgba(0,0,0,0.05)] text-xs uppercase tracking-wider">
                 {{ ts.t('total') }}
               </th>
               <!-- Storage Column -->
-              <th class="p-3 w-28 border-b border-l border-slate-200 bg-slate-100/90 backdrop-blur-md text-slate-800 font-extrabold sticky right-0 z-20 shadow-[-5px_0_15px_-5px_rgba(0,0,0,0.05)] text-xs uppercase tracking-wider">
+              <th class="p-3 w-28 min-w-[112px] max-w-[112px] border-b border-l border-slate-200 bg-slate-100 text-slate-800 font-extrabold sticky right-0 z-20 shadow-[-5px_0_15px_-5px_rgba(0,0,0,0.05)] text-xs uppercase tracking-wider">
                 {{ ts.t('storage_quantity') }}
               </th>
             </tr>
@@ -145,7 +145,7 @@ import { PrintService } from '../services/print.service';
                   (dragover)="onProductDragOver($event, idx)"
                   (drop)="onProductDrop($event, idx)"
                   (dragend)="onProductDragEnd()"
-                  class="p-3 border-b border-r border-slate-200 bg-slate-50/80 font-semibold text-sm text-slate-700 sticky left-0 z-10 cursor-grab active:cursor-grabbing hover:bg-slate-200/50 transition-colors whitespace-nowrap"
+                  class="p-3 border-b border-r border-slate-200 bg-slate-50 font-semibold text-sm text-slate-700 sticky left-0 z-10 cursor-grab active:cursor-grabbing hover:bg-slate-200 transition-colors whitespace-nowrap"
                   (contextmenu)="onProdContextMenu($event, prod)"
                 >
                   <span class="inline-flex items-center gap-1.5">
@@ -173,12 +173,12 @@ import { PrintService } from '../services/print.service';
                 }
 
                 <!-- Spacer for Add Dept Column -->
-                <td class="border-b border-slate-200 bg-slate-50/50 no-print"></td>
+                <td class="w-14 min-w-[56px] max-w-[56px] border-b border-slate-200 bg-slate-50 no-print"></td>
 
                 <!-- Row Total -->
                 <td 
-                  class="p-3 border-b border-l border-slate-200 font-bold text-center sticky right-[112px] z-10 shadow-[-5px_0_15px_-5px_rgba(0,0,0,0.05)] text-sm transition-colors"
-                  [class.bg-slate-50/80]="!isOverLimit(prod.id)"
+                  class="p-3 w-28 min-w-[112px] max-w-[112px] border-b border-l border-slate-200 font-bold text-center sticky right-[112px] z-10 shadow-[-5px_0_15px_-5px_rgba(0,0,0,0.05)] text-sm transition-colors"
+                  [class.bg-slate-50]="!isOverLimit(prod.id)"
                   [class.text-blue-700]="!isOverLimit(prod.id)"
                   [class.text-white]="isOverLimit(prod.id)"
                   [class.bg-red-500]="isOverLimit(prod.id)"
@@ -188,7 +188,7 @@ import { PrintService } from '../services/print.service';
 
                 <!-- Row Storage -->
                 <td 
-                  class="p-3 border-b border-l border-slate-200 bg-slate-50/80 font-bold text-center sticky right-0 z-10 shadow-[-5px_0_15px_-5px_rgba(0,0,0,0.05)] text-sm transition-colors text-slate-700"
+                  class="p-3 w-28 min-w-[112px] max-w-[112px] border-b border-l border-slate-200 bg-slate-50 font-bold text-center sticky right-0 z-10 shadow-[-5px_0_15px_-5px_rgba(0,0,0,0.05)] text-sm transition-colors text-slate-700"
                 >
                   {{ getStorageAmount(prod.id) }}
                 </td>
@@ -197,7 +197,7 @@ import { PrintService } from '../services/print.service';
             
             <!-- Add Product Row -->
             <tr class="no-print">
-              <td class="p-3 border-t border-slate-200 sticky left-0 bg-white/80 backdrop-blur-md z-10">
+              <td class="p-3 border-t border-slate-200 sticky left-0 bg-white z-10">
                  <button (click)="promptAddProd()" class="w-full py-2 flex items-center justify-center gap-2 rounded-lg border border-dashed border-blue-400 text-blue-600 hover:bg-blue-50 transition-all hover:scale-[1.02] text-sm font-medium">
                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                    {{ ts.t('add_product') }}

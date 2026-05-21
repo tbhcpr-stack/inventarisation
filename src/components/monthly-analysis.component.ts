@@ -23,30 +23,30 @@ import { PrintService } from '../services/print.service';
   imports: [CommonModule, FormsModule],
   template: `
     <div 
-      class="h-full flex flex-col gap-5 p-5 bg-transparent outline-none printable-area print:h-auto print:overflow-visible print:block"
+      class="h-full flex flex-col gap-3.5 sm:gap-5 p-3.5 sm:p-5 bg-transparent outline-none printable-area print:h-auto print:overflow-visible print:block"
     >
       <!-- Controls -->
-      <div class="bg-white/40 p-5 rounded-2xl shadow-sm border border-slate-200/50 flex flex-wrap gap-5 items-center justify-between no-print backdrop-blur-md">
-        <div class="flex flex-wrap gap-5 items-end">
-            <div>
+      <div class="bg-white/40 p-3.5 sm:p-5 rounded-2xl shadow-sm border border-slate-200/50 flex flex-wrap gap-4 sm:gap-5 items-end justify-between no-print backdrop-blur-md">
+        <div class="flex flex-wrap gap-3 sm:gap-4 items-end w-full lg:w-auto">
+            <div class="flex-1 min-w-[130px] sm:flex-initial w-full">
               <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">{{ ts.t('start_date') }}</label>
               <input 
                 type="date" 
                 [ngModel]="projectService.analysisStartDate()" 
                 (ngModelChange)="projectService.analysisStartDate.set($event)"
-                class="px-4 py-2.5 bg-white/80 border border-slate-200 shadow-sm rounded-xl text-sm font-medium focus:ring-2 focus:ring-blue-400 focus:border-blue-400 focus:outline-none transition-all hover:bg-white"
+                class="w-full px-4 py-2.5 bg-white/80 border border-slate-200 shadow-sm rounded-xl text-sm font-medium focus:ring-2 focus:ring-blue-400 focus:border-blue-400 focus:outline-none transition-all hover:bg-white"
               />
             </div>
-            <div>
+            <div class="flex-1 min-w-[130px] sm:flex-initial w-full">
               <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">{{ ts.t('end_date') }}</label>
               <input 
                 type="date" 
                 [ngModel]="projectService.analysisEndDate()" 
                 (ngModelChange)="projectService.analysisEndDate.set($event)"
-                class="px-4 py-2.5 bg-white/80 border border-slate-200 shadow-sm rounded-xl text-sm font-medium focus:ring-2 focus:ring-blue-400 focus:border-blue-400 focus:outline-none transition-all hover:bg-white"
+                class="w-full px-4 py-2.5 bg-white/80 border border-slate-200 shadow-sm rounded-xl text-sm font-medium focus:ring-2 focus:ring-blue-400 focus:border-blue-400 focus:outline-none transition-all hover:bg-white"
               />
             </div>
-            <div>
+            <div class="flex-1 min-w-[130px] sm:flex-initial w-full">
                <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">{{ ts.t('method') }}</label>
                 <select [ngModel]="method()" (ngModelChange)="method.set($event)" class="w-full text-sm font-medium bg-white/80 border border-slate-200 shadow-sm rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 focus:outline-none transition-all hover:bg-white">
                   <option value="sum">{{ ts.t('total_per_month') }}</option>
@@ -55,18 +55,18 @@ import { PrintService } from '../services/print.service';
             </div>
         </div>
 
-        <div class="flex items-center gap-4">
-            <button (click)="printGrid()" class="px-4 py-2 bg-slate-800 text-white rounded-xl hover:bg-slate-900 transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 flex items-center gap-2 text-sm font-medium">
+        <div class="flex items-center gap-3 sm:gap-4 justify-between w-full lg:w-auto lg:justify-end mt-2 lg:mt-0 flex-wrap">
+            <button (click)="printGrid()" class="flex-1 lg:flex-none px-4 py-2 bg-slate-800 text-white rounded-xl hover:bg-slate-900 transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 flex items-center justify-center gap-2 text-sm font-medium">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
               {{ ts.t('print') }}
             </button>
-            <button (click)="exportToExcel()" class="px-4 py-2 text-sm font-medium bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-xl hover:from-emerald-600 hover:to-green-700 transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 flex items-center gap-2">
+            <button (click)="exportToExcel()" class="flex-1 lg:flex-none px-4 py-2 text-sm font-medium bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-xl hover:from-emerald-600 hover:to-green-700 transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 flex items-center justify-center gap-2">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><polyline points="9 15 12 18 15 15"></polyline></svg>
               {{ ts.t('export_excel') }}
             </button>
 
             <!-- Zoom Controls -->
-            <div class="flex items-center gap-1.5 ml-2">
+            <div class="flex-1 lg:flex-initial justify-center flex items-center gap-1.5">
               <span class="text-xs font-bold text-slate-500 uppercase tracking-widest mr-1">{{ ts.t('zoom') }}</span>
               <button (click)="zoomOut()" class="w-8 h-8 flex items-center justify-center rounded-full bg-white hover:bg-slate-50 text-slate-600 shadow-sm border border-slate-200 font-mono transition-transform hover:scale-105">-</button>
               <button (click)="resetZoom()" class="text-sm w-14 font-semibold text-slate-700 hover:text-blue-600 transition-colors text-center">{{ zoomLevel() * 100 | number:'1.0-0' }}%</button>
