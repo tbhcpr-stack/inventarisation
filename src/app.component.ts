@@ -25,10 +25,10 @@ import { SupabaseService, BackupInfo } from './services/supabase.service';
   
   <!-- Top Navigation Bar -->
   <header class="bg-slate-900/85 backdrop-blur-xl border-b border-white/10 text-white shadow-xl sticky top-0 z-50 transition-all">
-    <div class="container mx-auto px-4 min-h-16 py-3 flex flex-wrap items-center justify-center lg:justify-between gap-y-3 gap-x-4">
+    <div class="w-full px-4 sm:px-6 min-h-16 py-2.5 flex flex-wrap items-center justify-between gap-y-2 gap-x-3">
       
       <!-- Logo / Title & Project Switcher -->
-      <div class="flex items-center gap-3 sm:gap-4 flex-wrap justify-center lg:justify-start">
+      <div class="flex items-center gap-3 sm:gap-4 flex-nowrap justify-start">
         <div class="flex items-center gap-3">
           <img src="assets/logo.png" class="w-10 h-10 object-contain rounded-xl shadow-[0_0_15px_rgba(59,130,246,0.3)] ring-1 ring-white/10" alt="Logo">
           <h1 class="text-xl font-display font-bold tracking-tight hidden lg:block bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">{{ ts.t('app_title') }}</h1>
@@ -98,7 +98,7 @@ import { SupabaseService, BackupInfo } from './services/supabase.service';
       <!-- Right Controls (Menu) -->
       <div class="flex items-center gap-2 sm:gap-4 flex-wrap justify-center lg:justify-end">
         <!-- View Tabs -->
-        <div class="flex flex-wrap gap-1 bg-slate-950/50 p-1 rounded-xl border border-white/5 shadow-inner justify-center">
+        <div class="flex flex-nowrap gap-1 bg-slate-950/50 p-1 rounded-xl border border-white/5 shadow-inner justify-center">
           <button (click)="setView('grid')" [class.bg-gradient-to-r]="viewMode === 'grid'" [class.from-blue-600]="viewMode === 'grid'" [class.to-indigo-600]="viewMode === 'grid'" [class.text-white]="viewMode === 'grid'" [class.shadow-md]="viewMode === 'grid'" [class.text-slate-400]="viewMode !== 'grid'" [class.hover:text-white]="viewMode !== 'grid'" class="px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all duration-300">
             {{ ts.t('nav_grid') }}
           </button>
@@ -123,7 +123,7 @@ import { SupabaseService, BackupInfo } from './services/supabase.service';
         </div>
 
         <!-- File Menu Dropdown (Simplified as Buttons for MVP) -->
-        <div class="flex items-center gap-1.5 flex-wrap justify-center ml-0 lg:ml-2">
+        <div class="flex items-center gap-1.5 flex-nowrap justify-center ml-0 lg:ml-2">
            <button (click)="handleNew()" class="p-2 hover:bg-slate-800 rounded-full text-slate-300 hover:text-white transition-all hover:scale-110" [title]="ts.t('new_project')">
              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
            </button>
