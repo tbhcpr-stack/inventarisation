@@ -9,7 +9,13 @@ const env = {
   SUPABASE_URL: process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.VITE_SUPABASE_URL || '',
   SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || '',
   SUPABASE_BUCKET: process.env.SUPABASE_BUCKET || process.env.NEXT_PUBLIC_SUPABASE_BUCKET || process.env.VITE_SUPABASE_BUCKET || '',
-  SUPABASE_AUTO_BACKUP: process.env.SUPABASE_AUTO_BACKUP || process.env.NEXT_PUBLIC_SUPABASE_AUTO_BACKUP || process.env.VITE_SUPABASE_AUTO_BACKUP || ''
+  SUPABASE_AUTO_BACKUP: process.env.SUPABASE_AUTO_BACKUP || process.env.NEXT_PUBLIC_SUPABASE_AUTO_BACKUP || process.env.VITE_SUPABASE_AUTO_BACKUP || '',
+  
+  // Prefixed options for direct mapping
+  VITE_SUPABASE_URL: process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL || '',
+  VITE_SUPABASE_ANON_KEY: process.env.VITE_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || '',
+  VITE_SUPABASE_BUCKET: process.env.VITE_SUPABASE_BUCKET || process.env.SUPABASE_BUCKET || '',
+  VITE_SUPABASE_AUTO_BACKUP: process.env.VITE_SUPABASE_AUTO_BACKUP || process.env.SUPABASE_AUTO_BACKUP || ''
 };
 
 const content = `window.env = ${JSON.stringify(env, null, 2)};\n`;
