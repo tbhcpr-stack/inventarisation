@@ -148,9 +148,42 @@ export class ProjectService {
 
   private initProjects() {
     try {
-      const projectsStr = localStorage.getItem('resource_tracker_projects');
-      const activeId = localStorage.getItem('resource_tracker_active_project_id');
+      let projectsStr = localStorage.getItem('resource_tracker_projects');
+      let activeId = localStorage.getItem('resource_tracker_active_project_id');
       
+      // Migration: Ensure the Default Project has ID 'default' for cross-environment consistency
+      if (projectsStr) {
+        try {
+          let loadedProjects = JSON.parse(projectsStr) as Project[];
+          let migrated = false;
+          
+          loadedProjects = loadedProjects.map(p => {
+            if (p.name === 'Default Project' && p.id !== 'default') {
+              migrated = true;
+              const oldKey = `resource_tracker_project_data_${p.id}`;
+              const oldData = localStorage.getItem(oldKey);
+              if (oldData) {
+                localStorage.setItem('resource_tracker_project_data_default', oldData);
+                localStorage.removeItem(oldKey);
+              }
+              if (activeId === p.id) {
+                activeId = 'default';
+              }
+              return { ...p, id: 'default' };
+            }
+            return p;
+          });
+
+          if (migrated) {
+            localStorage.setItem('resource_tracker_projects', JSON.stringify(loadedProjects));
+            localStorage.setItem('resource_tracker_active_project_id', activeId || 'default');
+            projectsStr = JSON.stringify(loadedProjects);
+          }
+        } catch (err) {
+          console.error('Error migrating default project ID:', err);
+        }
+      }
+
       if (projectsStr) {
         const loadedProjects = JSON.parse(projectsStr) as Project[];
         this.projects.set(loadedProjects);
@@ -181,7 +214,7 @@ export class ProjectService {
   }
 
   private createDefaultProject() {
-    const defaultId = this.generateId();
+    const defaultId = 'default';
     const defaultProject: Project = { id: defaultId, name: 'Default Project' };
     this.projects.set([defaultProject]);
     this.activeProjectId.set(defaultId);
