@@ -4,6 +4,7 @@ import { DateUtils } from './date.utils';
 import * as XLSX from 'xlsx';
 import * as ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
+import { SupabaseService } from './supabase.service';
 
 @Injectable({
   providedIn: 'root'
@@ -89,7 +90,9 @@ export class ProjectService {
     return map;
   });
 
-  constructor() {
+  private backupTimeout: any = null;
+
+  constructor(private supabaseService: SupabaseService) {
     this.initProjects();
 
     // Auto-save active project data whenever signals change
@@ -107,6 +110,17 @@ export class ProjectService {
       };
 
       this.saveProjectData(activeId, data);
+
+      // Auto backup to Supabase if configured and autoBackup is enabled
+      if (this.supabaseService.isConfigured() && this.supabaseService.autoBackup()) {
+        if (this.backupTimeout) {
+          clearTimeout(this.backupTimeout);
+        }
+        this.backupTimeout = setTimeout(async () => {
+          const jsonStr = JSON.stringify(data, null, 2);
+          await this.supabaseService.uploadMainFile(activeId, jsonStr);
+        }, 2000); // 2 seconds debounce
+      }
     });
   }
 

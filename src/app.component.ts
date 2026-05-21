@@ -12,6 +12,7 @@ import { MonthlyAnalysisComponent } from './components/monthly-analysis.componen
 import { StorageComponent } from './components/storage.component';
 import { PrintModalComponent } from './components/print-modal.component';
 import { ViewMode } from './types';
+import { SupabaseService } from './services/supabase.service';
 
 @Component({
   selector: 'app-root',
@@ -132,9 +133,29 @@ import { ViewMode } from './types';
              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
            </label>
 
-           <button (click)="handleSave()" class="p-2 hover:bg-slate-800 rounded-full text-slate-300 hover:text-white transition-all hover:scale-110" [title]="ts.t('save_json')">
-             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
-           </button>
+            <button (click)="handleSave()" class="p-2 hover:bg-slate-800 rounded-full text-slate-300 hover:text-white transition-all hover:scale-110" [title]="ts.t('save_json')">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+            </button>
+
+            @if (supabaseService.isConfigured()) {
+              <button (click)="handleRestoreFromSupabase()" class="p-2 hover:bg-slate-800 rounded-full text-slate-300 hover:text-white transition-all hover:scale-110 relative" [title]="ts.t('restore_from_supabase')" [disabled]="supabaseService.isDownloading()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-400"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                @if (supabaseService.isDownloading()) {
+                  <span class="absolute inset-0 flex items-center justify-center bg-slate-900/60 rounded-full">
+                    <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                  </span>
+                }
+              </button>
+            }
+
+            <button (click)="openSupabaseModal()" class="p-2 hover:bg-slate-800 rounded-full text-slate-300 hover:text-white transition-all hover:scale-110 relative" [title]="ts.t('supabase_settings')">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-400"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"></path></svg>
+              @if (supabaseService.isUploading()) {
+                <span class="absolute inset-0 flex items-center justify-center bg-slate-900/60 rounded-full">
+                  <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                </span>
+              }
+            </button>
 
            <div class="h-6 w-px bg-white/10 mx-2"></div>
 
@@ -330,6 +351,109 @@ import { ViewMode } from './types';
       </div>
     </div>
   }
+
+  <!-- Supabase Settings Modal -->
+  @if (showSupabaseModal()) {
+    <div class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md flex flex-col max-h-[90vh] border border-slate-100 overflow-hidden animate-fade-in">
+        <!-- Modal Header -->
+        <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+          <h3 class="font-display font-bold text-lg text-slate-800 flex items-center gap-2">
+             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"></path></svg>
+             {{ ts.t('supabase_settings') }}
+          </h3>
+          <button (click)="closeSupabaseModal()" class="text-slate-400 hover:text-slate-600 transition-colors rounded-full p-1.5 hover:bg-slate-100">
+             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+
+        <!-- Modal Content -->
+        <div class="flex-1 overflow-y-auto p-6 space-y-4 bg-white">
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">{{ ts.t('supabase_url') }}</label>
+            <input 
+              type="text" 
+              [ngModel]="supabaseUrlInput()" 
+              (ngModelChange)="supabaseUrlInput.set($event)"
+              placeholder="https://your-project.supabase.co" 
+              class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all"
+            />
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">{{ ts.t('supabase_key') }}</label>
+            <input 
+              type="password" 
+              [ngModel]="supabaseKeyInput()" 
+              (ngModelChange)="supabaseKeyInput.set($event)"
+              placeholder="eyJhbGciOi..." 
+              class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all"
+            />
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">{{ ts.t('supabase_bucket') }}</label>
+            <input 
+              type="text" 
+              [ngModel]="supabaseBucketInput()" 
+              (ngModelChange)="supabaseBucketInput.set($event)"
+              placeholder="e.g. inventory-backups" 
+              class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition-all"
+            />
+          </div>
+
+          <label class="flex items-center gap-3 p-3 hover:bg-slate-50 rounded-xl cursor-pointer transition-colors border border-slate-100 select-none">
+            <input 
+              type="checkbox" 
+              [ngModel]="supabaseAutoBackupInput()" 
+              (ngModelChange)="supabaseAutoBackupInput.set($event)"
+              class="rounded text-blue-600 w-5 h-5 border-slate-300 focus:ring-blue-500"
+            />
+            <span class="text-sm font-semibold text-slate-700">{{ ts.t('supabase_auto_backup') }}</span>
+          </label>
+
+          @if (testConnectionStatus() === 'success') {
+            <div class="p-3 bg-emerald-50 text-emerald-700 rounded-xl border border-emerald-100 text-xs font-medium flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-500"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              {{ ts.t('connection_success') }}
+            </div>
+          }
+          @if (testConnectionStatus() === 'failed') {
+            <div class="p-3 bg-rose-50 text-rose-700 rounded-xl border border-rose-100 text-xs font-medium flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-rose-500"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+              {{ ts.t('connection_failed') }}
+            </div>
+          }
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="p-4 border-t border-slate-100 flex justify-between gap-3 bg-slate-50 rounded-b-2xl">
+          <button 
+            (click)="testSupabaseConnection()" 
+            [disabled]="isTestingConnection() || !supabaseUrlInput() || !supabaseKeyInput() || !supabaseBucketInput()" 
+            class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl text-sm font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm flex items-center gap-2"
+          >
+            @if (isTestingConnection()) {
+              <svg class="animate-spin h-4 w-4 text-slate-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+              {{ ts.t('testing') }}
+            } @else {
+              {{ ts.t('test_connection') }}
+            }
+          </button>
+          <div class="flex gap-2">
+            <button (click)="closeSupabaseModal()" class="px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors shadow-sm">{{ ts.t('cancel') }}</button>
+            <button 
+              (click)="saveSupabaseSettings()" 
+              [disabled]="!supabaseUrlInput() || !supabaseKeyInput() || !supabaseBucketInput()" 
+              class="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+            >
+              {{ ts.t('save') }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
 </div>
 `
 })
@@ -337,7 +461,18 @@ export class AppComponent {
   projectService = inject(ProjectService);
   ts = inject(TranslationService);
   printService = inject(PrintService);
+  supabaseService = inject(SupabaseService);
+
   viewMode: ViewMode = 'grid';
+
+  // Supabase Modal Signals
+  showSupabaseModal = signal(false);
+  supabaseUrlInput = signal('');
+  supabaseKeyInput = signal('');
+  supabaseBucketInput = signal('');
+  supabaseAutoBackupInput = signal(false);
+  isTestingConnection = signal(false);
+  testConnectionStatus = signal<'idle' | 'success' | 'failed'>('idle');
 
   // Date Logic
   currentDateInput = computed(() => DateUtils.appFormatToInput(this.projectService.currentDate()));
@@ -499,7 +634,7 @@ export class AppComponent {
     this.openHistoryModal();
   }
 
-  handleSave() {
+  async handleSave() {
     const json = this.projectService.getProjectJSON();
     const blob = new Blob([json], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -507,6 +642,81 @@ export class AppComponent {
     a.href = url;
     a.download = `Project_${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
+
+    // If Supabase is configured, upload to Supabase as main and backup
+    if (this.supabaseService.isConfigured()) {
+      const activeId = this.projectService.activeProjectId();
+      if (activeId) {
+        const mainOk = await this.supabaseService.uploadMainFile(activeId, json);
+        const backupOk = await this.supabaseService.uploadBackupFile(activeId, json);
+        if (mainOk && backupOk) {
+          alert(this.ts.t('save_success'));
+        }
+      }
+    }
+  }
+
+  openSupabaseModal() {
+    this.supabaseUrlInput.set(this.supabaseService.url());
+    this.supabaseKeyInput.set(this.supabaseService.anonKey());
+    this.supabaseBucketInput.set(this.supabaseService.bucket());
+    this.supabaseAutoBackupInput.set(this.supabaseService.autoBackup());
+    this.testConnectionStatus.set('idle');
+    this.showSupabaseModal.set(true);
+  }
+
+  closeSupabaseModal() {
+    this.showSupabaseModal.set(false);
+  }
+
+  saveSupabaseSettings() {
+    this.supabaseService.saveCredentials(
+      this.supabaseUrlInput(),
+      this.supabaseKeyInput(),
+      this.supabaseBucketInput(),
+      this.supabaseAutoBackupInput()
+    );
+    this.showSupabaseModal.set(false);
+  }
+
+  async testSupabaseConnection() {
+    this.isTestingConnection.set(true);
+    this.testConnectionStatus.set('idle');
+
+    // Temporarily apply inputs for the test
+    const originalUrl = this.supabaseService.url();
+    const originalKey = this.supabaseService.anonKey();
+    const originalBucket = this.supabaseService.bucket();
+
+    this.supabaseService.url.set(this.supabaseUrlInput().trim());
+    this.supabaseService.anonKey.set(this.supabaseKeyInput().trim());
+    this.supabaseService.bucket.set(this.supabaseBucketInput().trim());
+
+    const success = await this.supabaseService.testConnection();
+
+    // Revert inputs in service so they aren't saved unless the user hits "Save"
+    this.supabaseService.url.set(originalUrl);
+    this.supabaseService.anonKey.set(originalKey);
+    this.supabaseService.bucket.set(originalBucket);
+
+    this.isTestingConnection.set(false);
+    this.testConnectionStatus.set(success ? 'success' : 'failed');
+  }
+
+  async handleRestoreFromSupabase() {
+    const activeId = this.projectService.activeProjectId();
+    if (!activeId) return;
+
+    const confirmMsg = this.ts.t('restore_confirm');
+    if (confirm(confirmMsg)) {
+      const jsonStr = await this.supabaseService.downloadMainFile(activeId);
+      if (jsonStr) {
+        this.projectService.loadProjectJSON(jsonStr);
+        alert(this.ts.t('restore_success'));
+      } else {
+        alert(this.ts.t('restore_failed'));
+      }
+    }
   }
 
   handleLoad(event: Event) {

@@ -130,7 +130,26 @@ const DICTIONARY: Record<string, Record<Lang, string>> = {
   'delete_project_confirm': { en: 'Delete project and all its data? This cannot be undone.', ge: 'წაიშალოს პროექტი და მისი ყველა მონაცემი? დაბრუნება შეუძლებელია.' },
   'project_name': { en: 'Project Name', ge: 'პროექტის სახელი' },
   'create': { en: 'Create', ge: 'შექმნა' },
-  'active_project': { en: 'Active Project', ge: 'აქტიური პროექტი' }
+  'active_project': { en: 'Active Project', ge: 'აქტიური პროექტი' },
+
+  // Supabase
+  'supabase_settings': { en: 'Supabase Settings', ge: 'Supabase პარამეტრები' },
+  'supabase_url': { en: 'Supabase URL', ge: 'Supabase URL' },
+  'supabase_key': { en: 'Supabase Anon Key', ge: 'Supabase Anon Key' },
+  'supabase_bucket': { en: 'Bucket Name', ge: 'ბაკეტის სახელი' },
+  'supabase_auto_backup': { en: 'Auto-backup on Save', ge: 'ავტო-შენახვა შენახვისას' },
+  'test_connection': { en: 'Test Connection', ge: 'კავშირის შემოწმება' },
+  'restore_from_supabase': { en: 'Restore from Supabase', ge: 'Supabase-დან აღდგენა' },
+  'connection_success': { en: 'Connection successful!', ge: 'კავშირი წარმატებით დამყარდა!' },
+  'connection_failed': { en: 'Connection failed!', ge: 'კავშირი ვერ დამყარდა!' },
+  'restore_confirm': { en: 'Are you sure you want to restore from Supabase? This will overwrite your current local project data.', ge: 'დარწმუნებული ხართ, რომ გსურთ Supabase-დან აღდგენა? ეს გადააწერს თქვენს მიმდინარე ლოკალურ პროექტს.' },
+  'restore_success': { en: 'Project restored successfully from Supabase!', ge: 'პროექტი წარმატებით აღდგა Supabase-დან!' },
+  'restore_failed': { en: 'Failed to restore project from Supabase. Make sure the file exists.', ge: 'პროექტის აღდგენა Supabase-დან ვერ მოხერხდა. დარწმუნდით, რომ ფაილი არსებობს.' },
+  'save_success': { en: 'Project saved and uploaded to Supabase!', ge: 'პროექტი შენახულია და აიტვირთა Supabase-ში!' },
+  'saving': { en: 'Saving...', ge: 'ინახება...' },
+  'restoring': { en: 'Restoring...', ge: 'აღდგება...' },
+  'close': { en: 'Close', ge: 'დახურვა' },
+  'testing': { en: 'Testing...', ge: 'მოწმდება...' }
 };
 
 @Injectable({
