@@ -4,7 +4,7 @@ export type Lang = 'en' | 'ge';
 
 const DICTIONARY: Record<string, Record<Lang, string>> = {
   // App Titles & Nav
-  'app_title': { en: 'Inventarisation', ge: 'ინვენტარიზაცია' },
+  'app_title': { en: 'Inventory Tracking', ge: 'რესურსების მართვა' },
   'nav_grid': { en: 'Grid', ge: 'ბადე' },
   'nav_storage': { en: 'Storage', ge: 'მარაგი' },
   'nav_analysis': { en: 'Analysis', ge: 'ანალიზი' },
