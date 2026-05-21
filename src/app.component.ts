@@ -677,6 +677,12 @@ export class AppComponent {
       this.supabaseAutoBackupInput()
     );
     this.showSupabaseModal.set(false);
+
+    // Automatically trigger a sync from Supabase using the new credentials
+    const activeId = this.projectService.activeProjectId();
+    if (activeId) {
+      this.projectService.syncFromSupabase(activeId);
+    }
   }
 
   async testSupabaseConnection() {

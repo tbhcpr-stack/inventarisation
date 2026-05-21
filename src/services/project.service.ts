@@ -184,12 +184,15 @@ export class ProjectService {
         }
       }
 
+      let finalActiveId = 'default';
+
       if (projectsStr) {
         const loadedProjects = JSON.parse(projectsStr) as Project[];
         this.projects.set(loadedProjects);
         
         if (activeId && loadedProjects.some(p => p.id === activeId)) {
           this.activeProjectId.set(activeId);
+          finalActiveId = activeId;
           const data = this.loadProjectData(activeId);
           if (data) {
             this.applyProjectData(data);
@@ -197,6 +200,7 @@ export class ProjectService {
         } else if (loadedProjects.length > 0) {
           const firstId = loadedProjects[0].id;
           this.activeProjectId.set(firstId);
+          finalActiveId = firstId;
           const data = this.loadProjectData(firstId);
           if (data) {
             this.applyProjectData(data);
@@ -207,6 +211,9 @@ export class ProjectService {
       } else {
         this.createDefaultProject();
       }
+
+      // Automatically sync project from Supabase on startup
+      this.syncFromSupabase(finalActiveId);
     } catch (e) {
       console.error('Error initializing projects:', e);
       this.createDefaultProject();
@@ -284,6 +291,9 @@ export class ProjectService {
     } else {
       this.newProject();
     }
+
+    // Sync from Supabase in the background
+    this.syncFromSupabase(id);
   }
 
   deleteProject(id: string) {
@@ -637,6 +647,32 @@ export class ProjectService {
       alert('Error parsing JSON file.');
       console.error(e);
     }
+  }
+
+  async syncFromSupabase(projectId: string): Promise<boolean> {
+    if (!this.supabaseService.isConfigured()) {
+      console.log('Supabase not configured, skipping sync.');
+      return false;
+    }
+    console.log(`Syncing project ${projectId} from Supabase...`);
+    try {
+      const jsonStr = await this.supabaseService.downloadMainFile(projectId);
+      if (jsonStr) {
+        const data: ProjectData = JSON.parse(jsonStr);
+        if (Array.isArray(data.products) && Array.isArray(data.departments) && Array.isArray(data.usage)) {
+          this.applyProjectData(data);
+          console.log(`Successfully synced project ${projectId} from Supabase.`);
+          return true;
+        } else {
+          console.warn('Downloaded project data from Supabase has invalid structure:', data);
+        }
+      } else {
+        console.log(`No project data found on Supabase for project ${projectId} (or download failed).`);
+      }
+    } catch (e) {
+      console.error(`Error syncing project ${projectId} from Supabase:`, e);
+    }
+    return false;
   }
 
   // --- Invoice Parsing Logic ---
