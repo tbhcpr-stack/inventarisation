@@ -26,7 +26,7 @@ import { PrintService } from '../services/print.service';
     >
       <!-- Grid Controls -->
       <div class="p-3 border-b border-slate-200/50 bg-white/40 flex items-center justify-between text-sm shrink-0 flex-wrap gap-3 no-print backdrop-blur-sm">
-        <div class="flex items-center gap-3 sm:gap-4 flex-wrap w-full lg:w-auto justify-center lg:justify-start">
+        <div class="flex items-center gap-4 flex-wrap">
             <span class="font-semibold text-xs text-slate-600 uppercase tracking-wider">{{ ts.t('grid_layout') }}</span>
             <div class="flex items-center gap-1 bg-white/60 rounded-full p-1 shadow-sm border border-white/40">
                 <button 
@@ -39,29 +39,29 @@ import { PrintService } from '../services/print.service';
                   [class.bg-white/50]="!isFitContent()"
                   [class.text-slate-600]="!isFitContent()"
                   [class.hover:bg-white]="!isFitContent()"
-                  class="px-3 sm:px-4 py-1.5 rounded-full text-[11px] sm:text-xs transition-all font-medium flex items-center gap-1.5 sm:gap-2"
+                  class="px-4 py-1.5 rounded-full text-xs transition-all font-medium flex items-center gap-2"
                 >
-                  <div class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full transition-colors" [class.bg-white]="isFitContent()" [class.bg-slate-400]="!isFitContent()"></div>
+                  <div class="w-2 h-2 rounded-full transition-colors" [class.bg-white]="isFitContent()" [class.bg-slate-400]="!isFitContent()"></div>
                   {{ ts.t('fit_content') }}
                 </button>
             </div>
-            <div class="h-5 w-px bg-slate-300 hidden sm:block"></div>
-            <div class="flex items-center gap-1 sm:gap-1.5">
-                <span class="text-[11px] sm:text-xs font-semibold text-slate-600 uppercase tracking-wider mr-1">{{ ts.t('zoom') }}</span>
-                <button (click)="zoomOut()" class="w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center rounded-full bg-white hover:bg-slate-50 text-slate-600 shadow-sm border border-slate-200 font-mono transition-transform hover:scale-105 text-xs" title="Zoom Out (Ctrl + Mouse Wheel)">-</button>
-                <button (click)="resetZoom()" class="text-[11px] sm:text-xs w-11 sm:w-14 font-semibold text-slate-700 hover:text-blue-600 transition-colors text-center" title="Reset Zoom">{{ zoomLevel() * 100 | number:'1.0-0' }}%</button>
-                <button (click)="zoomIn()" class="w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center rounded-full bg-white hover:bg-slate-50 text-slate-600 shadow-sm border border-slate-200 font-mono transition-transform hover:scale-105 text-xs" title="Zoom In (Ctrl + Mouse Wheel)">+</button>
+            <div class="h-5 w-px bg-slate-300"></div>
+            <div class="flex items-center gap-1.5">
+                <span class="text-xs font-semibold text-slate-600 uppercase tracking-wider mr-1">{{ ts.t('zoom') }}</span>
+                <button (click)="zoomOut()" class="w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-slate-50 text-slate-600 shadow-sm border border-slate-200 font-mono transition-transform hover:scale-105" title="Zoom Out (Ctrl + Mouse Wheel)">-</button>
+                <button (click)="resetZoom()" class="text-xs w-14 font-semibold text-slate-700 hover:text-blue-600 transition-colors text-center" title="Reset Zoom">{{ zoomLevel() * 100 | number:'1.0-0' }}%</button>
+                <button (click)="zoomIn()" class="w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-slate-50 text-slate-600 shadow-sm border border-slate-200 font-mono transition-transform hover:scale-105" title="Zoom In (Ctrl + Mouse Wheel)">+</button>
             </div>
         </div>
 
-        <div class="flex items-center gap-2.5 sm:gap-3 flex-wrap justify-between w-full lg:w-auto lg:justify-end">
-            <button (click)="printGrid()" class="flex-1 lg:flex-none px-3 py-2 bg-slate-800 text-white rounded-xl hover:bg-slate-900 transition-all hover:scale-105 shadow-md hover:shadow-lg font-medium flex items-center justify-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs">
+        <div class="flex items-center gap-3 flex-wrap justify-end">
+            <button (click)="printGrid()" class="px-4 py-2 bg-slate-800 text-white rounded-xl hover:bg-slate-900 transition-all hover:scale-105 shadow-md hover:shadow-lg font-medium flex items-center gap-2 text-xs">
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
               {{ ts.t('print') }}
             </button>
             <button 
               (click)="confirmUsage()" 
-              class="flex-1 lg:flex-none px-3 py-2 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-xl hover:from-emerald-600 hover:to-green-700 transition-all hover:scale-105 shadow-md hover:shadow-lg font-medium flex items-center justify-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs"
+              class="px-4 py-2 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-xl hover:from-emerald-600 hover:to-green-700 transition-all hover:scale-105 shadow-md hover:shadow-lg font-medium flex items-center gap-2 text-xs"
               [disabled]="!projectService.hasUnconfirmedChanges()"
               [class.opacity-50]="!projectService.hasUnconfirmedChanges()"
               [class.cursor-not-allowed]="!projectService.hasUnconfirmedChanges()"

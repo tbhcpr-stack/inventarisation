@@ -12,7 +12,7 @@ import { MonthlyAnalysisComponent } from './components/monthly-analysis.componen
 import { StorageComponent } from './components/storage.component';
 import { PrintModalComponent } from './components/print-modal.component';
 import { ViewMode } from './types';
-import { SupabaseService } from './services/supabase.service';
+import { SupabaseService, BackupInfo } from './services/supabase.service';
 
 @Component({
   selector: 'app-root',
@@ -24,11 +24,11 @@ import { SupabaseService } from './services/supabase.service';
   <app-print-modal></app-print-modal>
   
   <!-- Top Navigation Bar -->
-  <header class="bg-slate-900/85 backdrop-blur-xl border-b border-white/10 text-white shadow-xl sticky top-0 z-50 transition-all no-print">
-    <div class="container mx-auto px-4 min-h-[4rem] py-2.5 lg:py-0 flex flex-wrap items-center justify-between gap-y-3 gap-x-4">
+  <header class="bg-slate-900/85 backdrop-blur-xl border-b border-white/10 text-white shadow-xl sticky top-0 z-50 transition-all">
+    <div class="container mx-auto px-4 min-h-16 py-3 flex flex-wrap items-center justify-center lg:justify-between gap-y-3 gap-x-4">
       
       <!-- Logo / Title & Project Switcher -->
-      <div class="flex items-center gap-2 sm:gap-4 flex-wrap">
+      <div class="flex items-center gap-3 sm:gap-4 flex-wrap justify-center lg:justify-start">
         <div class="flex items-center gap-3">
           <img src="assets/logo.png" class="w-10 h-10 object-contain rounded-xl shadow-[0_0_15px_rgba(59,130,246,0.3)] ring-1 ring-white/10" alt="Logo">
           <h1 class="text-xl font-display font-bold tracking-tight hidden lg:block bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">{{ ts.t('app_title') }}</h1>
@@ -37,18 +37,18 @@ import { SupabaseService } from './services/supabase.service';
         <div class="h-6 w-px bg-white/10 hidden md:block"></div>
 
         <!-- Project dropdown selector -->
-        <div class="relative flex items-center bg-slate-800/60 px-2 py-1 sm:px-3 sm:py-1.5 rounded-xl border border-white/5 shadow-inner backdrop-blur-md">
-           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-400 mr-1.5 sm:mr-2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+        <div class="relative flex items-center bg-slate-800/60 px-3 py-1.5 rounded-xl border border-white/5 shadow-inner backdrop-blur-md">
+           <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-400 mr-2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
            <select 
              [ngModel]="projectService.activeProjectId()" 
              (ngModelChange)="handleProjectChange($event)"
-             class="bg-transparent text-white text-[11px] sm:text-xs font-semibold focus:outline-none cursor-pointer pr-5 sm:pr-6 appearance-none z-10"
+             class="bg-transparent text-white text-xs font-semibold focus:outline-none cursor-pointer pr-6 appearance-none z-10"
            >
              @for (proj of projectService.projects(); track proj.id) {
                <option [value]="proj.id" class="text-black bg-white">{{ proj.name }}</option>
              }
            </select>
-           <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400 absolute right-1.5 sm:right-2 pointer-events-none"><polyline points="6 9 12 15 18 9"></polyline></svg>
+           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400 absolute right-2 pointer-events-none"><polyline points="6 9 12 15 18 9"></polyline></svg>
         </div>
 
         <!-- Manage Projects button -->
@@ -58,11 +58,11 @@ import { SupabaseService } from './services/supabase.service';
       </div>
 
       <!-- Center Controls (Date) -->
-      <div class="flex items-center gap-2 sm:gap-3 bg-slate-800/80 px-3 sm:px-5 py-1.5 sm:py-2 rounded-full border border-white/5 shadow-inner backdrop-blur-md">
+      <div class="flex items-center gap-3 bg-slate-800/80 px-5 py-2 rounded-full border border-white/5 shadow-inner backdrop-blur-md">
          
          <!-- Custom Date Picker Trigger (Icon Only) -->
-         <div class="relative flex items-center justify-center p-1 sm:p-1.5 rounded-full hover:bg-white/10 transition-colors cursor-pointer group w-7 h-7 sm:w-8 sm:h-8">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-300 group-hover:text-blue-300 transition-colors"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+         <div class="relative flex items-center justify-center p-1.5 rounded-full hover:bg-white/10 transition-colors cursor-pointer group w-8 h-8">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-300 group-hover:text-blue-300 transition-colors"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
             <input 
                  type="date" 
                  [value]="currentDateInput()" 
@@ -72,19 +72,19 @@ import { SupabaseService } from './services/supabase.service';
          </div>
 
          <!-- Formatted Date Text (Static Label) -->
-         <span class="text-xs sm:text-sm text-blue-100 font-medium min-w-[70px] sm:min-w-[80px] text-center select-none cursor-default tracking-wide">{{ currentDateDisplay() }}</span>
+         <span class="text-sm text-blue-100 font-medium min-w-[80px] text-center select-none cursor-default tracking-wide">{{ currentDateDisplay() }}</span>
          
          <!-- Delete / Manage History Button -->
          @if (projectService.savedDates().length > 0) {
-           <div class="h-4 sm:h-5 w-px bg-white/10 mx-0.5 sm:mx-1"></div>
+           <div class="h-5 w-px bg-white/10 mx-1"></div>
            
-           <button (click)="handleDeleteAction()" class="p-1 sm:p-1.5 hover:bg-red-500/20 rounded-full text-red-400 hover:text-red-300 transition-all hover:scale-105" [title]="ts.t('manage_history')">
-             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+           <button (click)="handleDeleteAction()" class="p-1.5 hover:bg-red-500/20 rounded-full text-red-400 hover:text-red-300 transition-all hover:scale-105" [title]="ts.t('manage_history')">
+             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
            </button>
            
            <!-- Dedicated History Dropdown Arrow -->
-           <div class="relative w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center hover:bg-white/10 rounded-full cursor-pointer transition-all" [title]="ts.t('load_saved_date')">
-             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-300 pointer-events-none"><polyline points="6 9 12 15 18 9"></polyline></svg>
+           <div class="relative w-7 h-7 flex items-center justify-center hover:bg-white/10 rounded-full cursor-pointer transition-all" [title]="ts.t('load_saved_date')">
+             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-300 pointer-events-none"><polyline points="6 9 12 15 18 9"></polyline></svg>
              <select (change)="onSavedDateSelect($event)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer appearance-none z-10">
                 <option value="" disabled [selected]="!isCurrentDateSaved()">{{ ts.t('load_saved_date') }}</option>
                 @for (date of projectService.savedDates(); track date) {
@@ -96,76 +96,123 @@ import { SupabaseService } from './services/supabase.service';
       </div>
 
       <!-- Right Controls (Menu) -->
-      <div class="flex items-center gap-2.5 sm:gap-4 flex-nowrap justify-between lg:justify-end w-full lg:w-auto lg:ml-0 min-w-0">
+      <div class="flex items-center gap-2 sm:gap-4 flex-wrap justify-center lg:justify-end">
         <!-- View Tabs -->
-        <div class="flex bg-slate-950/50 p-1 rounded-xl border border-white/5 shadow-inner max-w-full overflow-x-auto whitespace-nowrap scrollbar-none min-w-0 shrink">
-          <button (click)="setView('grid')" [class.bg-gradient-to-r]="viewMode === 'grid'" [class.from-blue-600]="viewMode === 'grid'" [class.to-indigo-600]="viewMode === 'grid'" [class.text-white]="viewMode === 'grid'" [class.shadow-md]="viewMode === 'grid'" [class.text-slate-400]="viewMode !== 'grid'" [class.hover:text-white]="viewMode !== 'grid'" class="px-2 sm:px-3.5 py-1 sm:py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 whitespace-nowrap">
+        <div class="flex flex-wrap gap-1 bg-slate-950/50 p-1 rounded-xl border border-white/5 shadow-inner justify-center">
+          <button (click)="setView('grid')" [class.bg-gradient-to-r]="viewMode === 'grid'" [class.from-blue-600]="viewMode === 'grid'" [class.to-indigo-600]="viewMode === 'grid'" [class.text-white]="viewMode === 'grid'" [class.shadow-md]="viewMode === 'grid'" [class.text-slate-400]="viewMode !== 'grid'" [class.hover:text-white]="viewMode !== 'grid'" class="px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all duration-300">
             {{ ts.t('nav_grid') }}
           </button>
-          <button (click)="setView('storage')" [class.bg-gradient-to-r]="viewMode === 'storage'" [class.from-blue-600]="viewMode === 'storage'" [class.to-indigo-600]="viewMode === 'storage'" [class.text-white]="viewMode === 'storage'" [class.shadow-md]="viewMode === 'storage'" [class.text-slate-400]="viewMode !== 'storage'" [class.hover:text-white]="viewMode !== 'storage'" class="px-2 sm:px-3.5 py-1 sm:py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 whitespace-nowrap">
+          <button (click)="setView('storage')" [class.bg-gradient-to-r]="viewMode === 'storage'" [class.from-blue-600]="viewMode === 'storage'" [class.to-indigo-600]="viewMode === 'storage'" [class.text-white]="viewMode === 'storage'" [class.shadow-md]="viewMode === 'storage'" [class.text-slate-400]="viewMode !== 'storage'" [class.hover:text-white]="viewMode !== 'storage'" class="px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all duration-300">
             {{ ts.t('nav_storage') }}
           </button>
-          <button (click)="setView('analysis')" [class.bg-gradient-to-r]="viewMode === 'analysis'" [class.from-blue-600]="viewMode === 'analysis'" [class.to-indigo-600]="viewMode === 'analysis'" [class.text-white]="viewMode === 'analysis'" [class.shadow-md]="viewMode === 'analysis'" [class.text-slate-400]="viewMode !== 'analysis'" [class.hover:text-white]="viewMode !== 'analysis'" class="px-2 sm:px-3.5 py-1 sm:py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 whitespace-nowrap">
+          <button (click)="setView('analysis')" [class.bg-gradient-to-r]="viewMode === 'analysis'" [class.from-blue-600]="viewMode === 'analysis'" [class.to-indigo-600]="viewMode === 'analysis'" [class.text-white]="viewMode === 'analysis'" [class.shadow-md]="viewMode === 'analysis'" [class.text-slate-400]="viewMode !== 'analysis'" [class.hover:text-white]="viewMode !== 'analysis'" class="px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all duration-300">
             {{ ts.t('nav_analysis') }}
           </button>
-          <button (click)="setView('monthly-analysis')" [class.bg-gradient-to-r]="viewMode === 'monthly-analysis'" [class.from-blue-600]="viewMode === 'monthly-analysis'" [class.to-indigo-600]="viewMode === 'monthly-analysis'" [class.text-white]="viewMode === 'monthly-analysis'" [class.shadow-md]="viewMode === 'monthly-analysis'" [class.text-slate-400]="viewMode !== 'monthly-analysis'" [class.hover:text-white]="viewMode !== 'monthly-analysis'" class="px-2 sm:px-3.5 py-1 sm:py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 whitespace-nowrap">
+          <button (click)="setView('monthly-analysis')" [class.bg-gradient-to-r]="viewMode === 'monthly-analysis'" [class.from-blue-600]="viewMode === 'monthly-analysis'" [class.to-indigo-600]="viewMode === 'monthly-analysis'" [class.text-white]="viewMode === 'monthly-analysis'" [class.shadow-md]="viewMode === 'monthly-analysis'" [class.text-slate-400]="viewMode !== 'monthly-analysis'" [class.hover:text-white]="viewMode !== 'monthly-analysis'" class="px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all duration-300">
             {{ ts.t('nav_monthly') }}
           </button>
-          <button (click)="setView('graph')" [class.bg-gradient-to-r]="viewMode === 'graph'" [class.from-blue-600]="viewMode === 'graph'" [class.to-indigo-600]="viewMode === 'graph'" [class.text-white]="viewMode === 'graph'" [class.shadow-md]="viewMode === 'graph'" [class.text-slate-400]="viewMode !== 'graph'" [class.hover:text-white]="viewMode !== 'graph'" class="px-2 sm:px-3.5 py-1 sm:py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 whitespace-nowrap">
+          <button (click)="setView('graph')" [class.bg-gradient-to-r]="viewMode === 'graph'" [class.from-blue-600]="viewMode === 'graph'" [class.to-indigo-600]="viewMode === 'graph'" [class.text-white]="viewMode === 'graph'" [class.shadow-md]="viewMode === 'graph'" [class.text-slate-400]="viewMode !== 'graph'" [class.hover:text-white]="viewMode !== 'graph'" class="px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all duration-300">
             {{ ts.t('nav_graph') }}
           </button>
         </div>
 
         <!-- Language Switcher -->
-        <div class="flex bg-slate-950/50 p-1 rounded-xl border border-white/5 shadow-inner shrink-0">
-          <button (click)="setLanguage('en')" [class.bg-gradient-to-r]="ts.currentLang() === 'en'" [class.from-slate-600]="ts.currentLang() === 'en'" [class.to-slate-700]="ts.currentLang() === 'en'" [class.text-white]="ts.currentLang() === 'en'" [class.shadow]="ts.currentLang() === 'en'" [class.text-slate-400]="ts.currentLang() !== 'en'" [class.hover:text-white]="ts.currentLang() !== 'en'" class="px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-lg text-[10px] sm:text-xs font-bold transition-all duration-300">EN</button>
-          <button (click)="setLanguage('ge')" [class.bg-gradient-to-r]="ts.currentLang() === 'ge'" [class.from-slate-600]="ts.currentLang() === 'ge'" [class.to-slate-700]="ts.currentLang() === 'ge'" [class.text-white]="ts.currentLang() === 'ge'" [class.shadow]="ts.currentLang() === 'ge'" [class.text-slate-400]="ts.currentLang() !== 'ge'" [class.hover:text-white]="ts.currentLang() !== 'ge'" class="px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-lg text-[10px] sm:text-xs font-bold transition-all duration-300">GE</button>
+        <div class="flex bg-slate-950/50 p-1 rounded-xl border border-white/5 shadow-inner">
+          <button (click)="setLanguage('en')" [class.bg-gradient-to-r]="ts.currentLang() === 'en'" [class.from-slate-600]="ts.currentLang() === 'en'" [class.to-slate-700]="ts.currentLang() === 'en'" [class.text-white]="ts.currentLang() === 'en'" [class.shadow]="ts.currentLang() === 'en'" [class.text-slate-400]="ts.currentLang() !== 'en'" [class.hover:text-white]="ts.currentLang() !== 'en'" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all duration-300">EN</button>
+          <button (click)="setLanguage('ge')" [class.bg-gradient-to-r]="ts.currentLang() === 'ge'" [class.from-slate-600]="ts.currentLang() === 'ge'" [class.to-slate-700]="ts.currentLang() === 'ge'" [class.text-white]="ts.currentLang() === 'ge'" [class.shadow]="ts.currentLang() === 'ge'" [class.text-slate-400]="ts.currentLang() !== 'ge'" [class.hover:text-white]="ts.currentLang() !== 'ge'" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all duration-300">GE</button>
         </div>
 
         <!-- File Menu Dropdown (Simplified as Buttons for MVP) -->
-        <div class="flex items-center gap-1 ml-0 sm:ml-2 justify-center shrink-0">
-           <button (click)="handleNew()" class="p-1.5 sm:p-2 hover:bg-slate-800 rounded-full text-slate-300 hover:text-white transition-all hover:scale-110" [title]="ts.t('new_project')">
-             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+        <div class="flex items-center gap-1.5 flex-wrap justify-center ml-0 lg:ml-2">
+           <button (click)="handleNew()" class="p-2 hover:bg-slate-800 rounded-full text-slate-300 hover:text-white transition-all hover:scale-110" [title]="ts.t('new_project')">
+             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
            </button>
            
-           <label class="p-1.5 sm:p-2 hover:bg-slate-800 rounded-full text-slate-300 hover:text-white cursor-pointer transition-all hover:scale-110" [title]="ts.t('load_json')">
+           <label class="p-2 hover:bg-slate-800 rounded-full text-slate-300 hover:text-white cursor-pointer transition-all hover:scale-110" [title]="ts.t('load_json')">
              <input type="file" accept=".json" class="hidden" (change)="handleLoad($event)">
-             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
            </label>
 
-            <button (click)="handleSave()" class="p-1.5 sm:p-2 hover:bg-slate-800 rounded-full text-slate-300 hover:text-white transition-all hover:scale-110" [title]="ts.t('save_json')">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+            <button (click)="handleSave()" class="p-2 hover:bg-slate-800 rounded-full text-slate-300 hover:text-white transition-all hover:scale-110" [title]="ts.t('save_json')">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
             </button>
 
-            @if (supabaseService.isConfigured()) {
-              <button (click)="handleRestoreFromSupabase()" class="p-1.5 sm:p-2 hover:bg-slate-800 rounded-full text-slate-300 hover:text-white transition-all hover:scale-110 relative" [title]="ts.t('restore_from_supabase')" [disabled]="supabaseService.isDownloading()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-400"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            <div class="relative">
+              <button (click)="toggleRestoreDropdown($event)" class="p-2 hover:bg-slate-800 rounded-full text-slate-300 hover:text-white transition-all hover:scale-110 relative" [title]="ts.t('restore_from_supabase')" [disabled]="supabaseService.isDownloading()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-400"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                 @if (supabaseService.isDownloading()) {
                   <span class="absolute inset-0 flex items-center justify-center bg-slate-900/60 rounded-full">
-                    <svg class="animate-spin h-3.5 w-3.5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                    <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                   </span>
                 }
               </button>
-            }
 
-            <button (click)="openSupabaseModal()" class="p-1.5 sm:p-2 hover:bg-slate-800 rounded-full text-slate-300 hover:text-white transition-all hover:scale-110 relative" [title]="ts.t('supabase_settings')">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-400"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"></path></svg>
+              @if (showRestoreDropdown()) {
+                <!-- Invisible Backdrop to Close Dropdown on Click Outside -->
+                <div class="fixed inset-0 z-40 bg-transparent" (click)="showRestoreDropdown.set(false)"></div>
+                
+                <!-- Dropdown Menu -->
+                <div class="absolute right-0 mt-2 w-80 bg-slate-900/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-4 z-50 text-slate-200 text-xs flex flex-col gap-4 animate-fade-in pointer-events-auto">
+                  @if (isLoadingBackups()) {
+                    <div class="flex items-center justify-center py-6 gap-2 text-slate-400">
+                      <svg class="animate-spin h-4 w-4 text-indigo-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                      <span>{{ ts.t('loading_backups') }}</span>
+                    </div>
+                  } @else {
+                    <!-- Manual Saved Versions -->
+                    <div>
+                      <div class="text-[10px] uppercase font-bold text-indigo-400 tracking-wider mb-2 px-2 border-l-2 border-indigo-500">{{ ts.t('saved_versions') }}</div>
+                      <div class="space-y-1 max-h-[140px] overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 pr-1">
+                        @for (backup of manualBackups(); track backup.name) {
+                          <button (click)="restoreBackup(backup)" class="w-full text-left px-2.5 py-2 hover:bg-white/5 rounded-xl flex items-center justify-between transition-all group hover:scale-[1.01]">
+                            <span class="font-medium text-slate-200 group-hover:text-white">{{ formatBackupDate(backup.createdAt) }}</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-500 group-hover:text-indigo-400 transition-colors"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                          </button>
+                        } @empty {
+                          <div class="text-slate-500 text-center py-3 italic">{{ ts.t('no_backups') }}</div>
+                        }
+                      </div>
+                    </div>
+
+                    <div class="h-px bg-white/10 my-1"></div>
+
+                    <!-- Auto Backups -->
+                    <div>
+                      <div class="text-[10px] uppercase font-bold text-blue-400 tracking-wider mb-2 px-2 border-l-2 border-blue-500">{{ ts.t('auto_backups') }}</div>
+                      <div class="space-y-1 max-h-[140px] overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 pr-1">
+                        @for (backup of autoBackups(); track backup.name) {
+                          <button (click)="restoreBackup(backup)" class="w-full text-left px-2.5 py-2 hover:bg-white/5 rounded-xl flex items-center justify-between transition-all group hover:scale-[1.01]">
+                            <span class="font-medium text-slate-200 group-hover:text-white">{{ formatBackupDate(backup.createdAt) }}</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-500 group-hover:text-blue-400 transition-colors"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                          </button>
+                        } @empty {
+                          <div class="text-slate-500 text-center py-3 italic">{{ ts.t('no_backups') }}</div>
+                        }
+                      </div>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+
+            <button (click)="openSupabaseModal()" class="p-2 hover:bg-slate-800 rounded-full text-slate-300 hover:text-white transition-all hover:scale-110 relative" [title]="ts.t('supabase_settings')">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-400"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"></path></svg>
               @if (supabaseService.isUploading()) {
                 <span class="absolute inset-0 flex items-center justify-center bg-slate-900/60 rounded-full">
-                  <svg class="animate-spin h-3.5 w-3.5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                  <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                 </span>
               }
             </button>
 
-           <div class="h-6 w-px bg-white/10 mx-1 sm:mx-2 hidden sm:block"></div>
+           <div class="h-6 w-px bg-white/10 hidden lg:block mx-2"></div>
 
-           <label class="p-2 sm:px-3 sm:py-1.5 bg-success/90 hover:bg-success rounded-full text-white cursor-pointer transition-all hover:shadow-[0_0_15px_rgba(16,185,129,0.4)] hover:-translate-y-0.5 flex items-center justify-center" [title]="ts.t('import_excel')">
+           <label class="px-3 py-1.5 bg-success/90 hover:bg-success rounded-full text-white cursor-pointer transition-all hover:shadow-[0_0_15px_rgba(16,185,129,0.4)] hover:-translate-y-0.5 flex items-center justify-center" [title]="ts.t('import_excel')">
               <input type="file" accept=".xlsx, .xlsm, .xls, .csv" class="hidden" (change)="handleImportExcel($event)">
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><line x1="12" y1="9" x2="12" y2="15"></line><line x1="9" y1="12" x2="15" y2="12"></line></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><line x1="12" y1="9" x2="12" y2="15"></line><line x1="9" y1="12" x2="15" y2="12"></line></svg>
            </label>
            
-           <button (click)="exportExcel()" class="p-2 sm:px-3 sm:py-1.5 bg-success/90 hover:bg-success rounded-full text-white transition-all hover:shadow-[0_0_15px_rgba(16,185,129,0.4)] hover:-translate-y-0.5 flex items-center justify-center" [title]="ts.t('export_excel')">
-             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><polyline points="9 15 12 18 15 15"></polyline></svg>
+           <button (click)="exportExcel()" class="px-3 py-1.5 bg-success/90 hover:bg-success rounded-full text-white transition-all hover:shadow-[0_0_15px_rgba(16,185,129,0.4)] hover:-translate-y-0.5 flex items-center justify-center" [title]="ts.t('export_excel')">
+             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><polyline points="9 15 12 18 15 15"></polyline></svg>
            </button>
         </div>
       </div>
@@ -474,6 +521,12 @@ export class AppComponent {
   isTestingConnection = signal(false);
   testConnectionStatus = signal<'idle' | 'success' | 'failed'>('idle');
 
+  // Supabase Restore Dropdown Signals
+  showRestoreDropdown = signal(false);
+  isLoadingBackups = signal(false);
+  manualBackups = signal<BackupInfo[]>([]);
+  autoBackups = signal<BackupInfo[]>([]);
+
   // Date Logic
   currentDateInput = computed(() => DateUtils.appFormatToInput(this.projectService.currentDate()));
   isCurrentDateSaved = computed(() => this.projectService.savedDates().includes(this.projectService.currentDate()));
@@ -709,13 +762,41 @@ export class AppComponent {
     this.testConnectionStatus.set(success ? 'success' : 'failed');
   }
 
-  async handleRestoreFromSupabase() {
+  async toggleRestoreDropdown(event: Event) {
+    event.stopPropagation();
+    if (!this.supabaseService.isConfigured()) {
+      alert(this.ts.t('supabase_not_configured'));
+      this.openSupabaseModal();
+      return;
+    }
+    const isShowing = !this.showRestoreDropdown();
+    this.showRestoreDropdown.set(isShowing);
+    if (isShowing) {
+      await this.fetchBackups();
+    }
+  }
+
+  async fetchBackups() {
     const activeId = this.projectService.activeProjectId();
     if (!activeId) return;
 
+    this.isLoadingBackups.set(true);
+    try {
+      const { manual, auto } = await this.supabaseService.listBackups(activeId);
+      this.manualBackups.set(manual);
+      this.autoBackups.set(auto);
+    } catch (e) {
+      console.error('Error fetching backups list:', e);
+    } finally {
+      this.isLoadingBackups.set(false);
+    }
+  }
+
+  async restoreBackup(backup: BackupInfo) {
     const confirmMsg = this.ts.t('restore_confirm');
     if (confirm(confirmMsg)) {
-      const jsonStr = await this.supabaseService.downloadMainFile(activeId);
+      this.showRestoreDropdown.set(false);
+      const jsonStr = await this.supabaseService.downloadBackupFileByPath(backup.path);
       if (jsonStr) {
         this.projectService.loadProjectJSON(jsonStr);
         alert(this.ts.t('restore_success'));
@@ -723,6 +804,17 @@ export class AppComponent {
         alert(this.ts.t('restore_failed'));
       }
     }
+  }
+
+  formatBackupDate(date: Date): string {
+    const pad = (n: number) => n.toString().padStart(2, '0');
+    const day = pad(date.getDate());
+    const month = pad(date.getMonth() + 1);
+    const year = date.getFullYear();
+    const hours = pad(date.getHours());
+    const minutes = pad(date.getMinutes());
+    const seconds = pad(date.getSeconds());
+    return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
   }
 
   handleLoad(event: Event) {

@@ -15,15 +15,15 @@ import { PrintService } from '../services/print.service';
       class="h-full flex flex-col bg-transparent overflow-hidden relative print:h-auto print:overflow-visible print:block"
     >
       <!-- Controls Bar -->
-      <div class="p-2.5 sm:p-3 border-b border-slate-200/50 bg-white/40 flex items-center justify-between text-xs shrink-0 sticky top-0 z-50 flex-wrap gap-2.5 sm:gap-3 no-print backdrop-blur-sm">
-         <div class="flex items-center gap-3 sm:gap-4 text-slate-500 font-medium w-full md:w-auto justify-center md:justify-start">
-            <span class="bg-blue-50/80 text-blue-700 px-3 py-1.5 rounded-full border border-blue-100 shadow-sm text-[10px] sm:text-xs text-center">{{ ts.t('storage_auto_calculated') }}</span>
+      <div class="p-3 border-b border-slate-200/50 bg-white/40 flex items-center justify-between text-xs shrink-0 sticky top-0 z-50 flex-wrap gap-3 no-print backdrop-blur-sm">
+         <div class="flex items-center gap-4 text-slate-500 font-medium">
+            <span class="bg-blue-50/80 text-blue-700 px-3 py-1.5 rounded-full border border-blue-100 shadow-sm">{{ ts.t('storage_auto_calculated') }}</span>
          </div>
          
-         <div class="flex items-center gap-2.5 sm:gap-4 flex-wrap justify-center md:justify-end w-full md:w-auto">
+         <div class="flex items-center gap-4 flex-wrap justify-end">
             <!-- Settings & History & Import -->
             <button (click)="openSettings()" class="text-slate-500 hover:text-blue-600 transition-colors p-1.5 hover:bg-white/60 rounded-full" [title]="ts.t('product_settings')">
-               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.74v-.47a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.74v-.47a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
             </button>
             
             <button (click)="openHistory()" class="text-slate-500 hover:text-blue-600 transition-colors p-1.5 hover:bg-white/60 rounded-full" [title]="ts.t('import_history')">
@@ -31,40 +31,40 @@ import { PrintService } from '../services/print.service';
             </button>
 
             <!-- Regular Import -->
-            <label class="flex-1 md:flex-initial px-3 sm:px-4 py-1.5 bg-white/80 border border-slate-200 shadow-sm rounded-full hover:bg-white hover:shadow-md cursor-pointer flex items-center justify-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs font-medium text-slate-700 transition-all">
+            <label class="px-4 py-1.5 bg-white/80 border border-slate-200 shadow-sm rounded-full hover:bg-white hover:shadow-md cursor-pointer flex items-center gap-2 text-xs font-medium text-slate-700 transition-all">
                 <input type="file" accept=".xlsx, .xlsm, .xls, .csv" class="hidden" (change)="handleInvoiceImport($event)">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-500"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
                 {{ ts.t('import_invoice') }}
             </label>
 
             <!-- RS.GE Import (Automated Process Shortcut) -->
-            <label class="flex-1 md:flex-initial px-3 sm:px-4 py-1.5 bg-gradient-to-r from-indigo-50 to-blue-50 border border-indigo-200 shadow-sm rounded-full hover:from-indigo-100 hover:to-blue-100 cursor-pointer flex items-center justify-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs font-semibold text-indigo-700 transition-all hover:shadow-md" [title]="ts.t('import_rs_tooltip')">
+            <label class="px-4 py-1.5 bg-gradient-to-r from-indigo-50 to-blue-50 border border-indigo-200 shadow-sm rounded-full hover:from-indigo-100 hover:to-blue-100 cursor-pointer flex items-center gap-2 text-xs font-semibold text-indigo-700 transition-all hover:shadow-md" [title]="ts.t('import_rs_tooltip')">
                 <input type="file" accept=".xlsx, .xlsm, .xls, .csv" class="hidden" (change)="handleInvoiceImport($event)">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-600"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                 {{ ts.t('import_rs') }}
             </label>
 
-            <div class="h-5 w-px bg-slate-200 mx-1 hidden md:block"></div>
+            <div class="h-5 w-px bg-slate-200 mx-1"></div>
 
-            <button (click)="printStorage()" class="flex-1 md:flex-initial px-3 py-1.5 bg-slate-800 text-white rounded-full hover:bg-slate-900 transition-all hover:scale-105 shadow-md hover:shadow-lg font-medium flex items-center justify-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs">
+            <button (click)="printStorage()" class="px-3 py-1.5 bg-slate-800 text-white rounded-full hover:bg-slate-900 transition-all hover:scale-105 shadow-md hover:shadow-lg font-medium flex items-center gap-2 text-xs">
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
               {{ ts.t('print') }}
             </button>
 
             <!-- Zoom Controls -->
-            <div class="flex items-center gap-1 sm:gap-1.5 ml-0 sm:ml-2 shrink-0 justify-center">
-                <span class="text-[10px] sm:text-xs font-semibold text-slate-600 uppercase tracking-wider mr-1">{{ ts.t('zoom') }}</span>
-                <button (click)="zoomOut()" class="w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center rounded-full bg-white hover:bg-slate-50 text-slate-600 shadow-sm border border-slate-200 font-mono transition-transform hover:scale-105 text-xs">-</button>
-                <button (click)="resetZoom()" class="text-[10px] sm:text-xs w-11 sm:w-14 font-semibold text-slate-700 hover:text-blue-600 transition-colors text-center">{{ zoomLevel() * 100 | number:'1.0-0' }}%</button>
-                <button (click)="zoomIn()" class="w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center rounded-full bg-white hover:bg-slate-50 text-slate-600 shadow-sm border border-slate-200 font-mono transition-transform hover:scale-105 text-xs">+</button>
+            <div class="flex items-center gap-1.5 ml-2">
+                <span class="text-xs font-semibold text-slate-600 uppercase tracking-wider mr-1">{{ ts.t('zoom') }}</span>
+                <button (click)="zoomOut()" class="w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-slate-50 text-slate-600 shadow-sm border border-slate-200 font-mono transition-transform hover:scale-105">-</button>
+                <button (click)="resetZoom()" class="text-xs w-14 font-semibold text-slate-700 hover:text-blue-600 transition-colors text-center">{{ zoomLevel() * 100 | number:'1.0-0' }}%</button>
+                <button (click)="zoomIn()" class="w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-slate-50 text-slate-600 shadow-sm border border-slate-200 font-mono transition-transform hover:scale-105">+</button>
             </div>
          
             <!-- Confirm Orders Button -->
-            <div class="h-5 w-px bg-slate-200 mx-1 hidden md:block"></div>
+            <div class="h-5 w-px bg-slate-200 mx-1"></div>
             
             <button 
               (click)="confirmOrders()" 
-              class="flex-1 md:flex-initial px-4 py-1.5 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-full hover:from-emerald-600 hover:to-green-700 transition-all hover:shadow-lg shadow-md font-medium flex items-center justify-center gap-2 text-xs"
+              class="px-4 py-1.5 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-full hover:from-emerald-600 hover:to-green-700 transition-all hover:shadow-lg shadow-md font-medium flex items-center gap-2 text-xs"
               [disabled]="!hasOrders()"
               [class.opacity-50]="!hasOrders()"
               [class.hover:scale-105]="hasOrders()"

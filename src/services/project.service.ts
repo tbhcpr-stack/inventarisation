@@ -119,6 +119,7 @@ export class ProjectService {
         this.backupTimeout = setTimeout(async () => {
           const jsonStr = JSON.stringify(data, null, 2);
           await this.supabaseService.uploadMainFile(activeId, jsonStr);
+          await this.supabaseService.uploadAutoBackupFile(activeId, jsonStr);
         }, 2000); // 2 seconds debounce
       }
     });

@@ -149,7 +149,12 @@ const DICTIONARY: Record<string, Record<Lang, string>> = {
   'saving': { en: 'Saving...', ge: 'ინახება...' },
   'restoring': { en: 'Restoring...', ge: 'აღდგება...' },
   'close': { en: 'Close', ge: 'დახურვა' },
-  'testing': { en: 'Testing...', ge: 'მოწმდება...' }
+  'testing': { en: 'Testing...', ge: 'მოწმდება...' },
+  'saved_versions': { en: 'Saved Versions', ge: 'შენახული ვერსიები' },
+  'auto_backups': { en: 'Auto-backups', ge: 'ავტო-ვერსიები' },
+  'no_backups': { en: 'No backups found', ge: 'ვერსიები ვერ მოიძებნა' },
+  'loading_backups': { en: 'Loading backups...', ge: 'ჩატვირთვა...' },
+  'supabase_not_configured': { en: 'Supabase is not configured. Please enter settings first.', ge: 'Supabase არ არის კონფიგურირებული. გთხოვთ შეიყვანოთ პარამეტრები.' }
 };
 
 @Injectable({

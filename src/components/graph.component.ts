@@ -111,17 +111,17 @@ import { PrintService } from '../services/print.service';
       <!-- Chart Area -->
       <div class="flex-1 flex flex-col min-h-[500px]">
          <div class="flex-1 bg-white/60 backdrop-blur-md rounded-2xl shadow-sm border border-slate-200/50 p-5 relative flex flex-col">
-            <div class="flex flex-wrap gap-3 justify-between items-center mb-6 no-print">
+            <div class="flex justify-between items-center mb-6 no-print">
               <h3 class="font-bold text-slate-700 text-lg flex items-center gap-2">
                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-500"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"></polygon><line x1="9" y1="3" x2="9" y2="18"></line><line x1="15" y1="6" x2="15" y2="21"></line></svg>
                  {{ ts.t('analytics_vis') }}
               </h3>
-              <div class="flex gap-2 w-full sm:w-auto">
-                <button (click)="printGraph()" class="flex-1 sm:flex-initial justify-center text-sm font-medium bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-xl flex items-center gap-2 transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5">
+              <div class="flex gap-3">
+                <button (click)="printGraph()" class="text-sm font-medium bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-xl flex items-center gap-2 transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5">
                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
                   {{ ts.t('print') }}
                 </button>
-                <button (click)="downloadChart()" class="flex-1 sm:flex-initial justify-center text-sm font-medium bg-white hover:bg-slate-50 border border-slate-200 shadow-sm text-slate-700 px-4 py-2 rounded-xl flex items-center gap-2 transition-all hover:shadow-md hover:-translate-y-0.5">
+                <button (click)="downloadChart()" class="text-sm font-medium bg-white hover:bg-slate-50 border border-slate-200 shadow-sm text-slate-700 px-4 py-2 rounded-xl flex items-center gap-2 transition-all hover:shadow-md hover:-translate-y-0.5">
                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-500"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                   {{ ts.t('export_png') }}
                 </button>
